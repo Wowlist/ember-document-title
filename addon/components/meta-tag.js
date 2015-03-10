@@ -1,10 +1,13 @@
 import Ember from "ember";
 import TokenList from "../system/token-list";
 
-var tokens = new TokenList(),
+var tokensAllTypes = [],
+    tokens = null,
     get = Ember.get,
     set = Ember.set,
     $ = Ember.$;
+
+    //tokens = new TokenList(),
 
 export default Ember.Component.extend({
   // Public API
@@ -12,21 +15,52 @@ export default Ember.Component.extend({
   title: null,
   prepend: null,
   replace: false,
+  
+  key: null,
+  type: null,
 
   isVirtual: true,
   tagName: '',
   hidden: false,
 
+
+  typeSafe: function(){
+    return get(this, 'type').replace(/:/g, "");
+  }.property('type'),
+
   init: function () {
-    console.log('meta-description: init');
+    // create a hidden container in the dom for rendering meta-tag templates
+    if ( !$( "#meta-tag-render-container" ).length ) {
+      $( "body" ).append( "<div id='meta-tag-render-container' style='display:none;'></div>" ); 
+    }
+    
+    if(Ember.isEmpty(tokensAllTypes[get(this, 'typeSafe')])){
+      tokensAllTypes[get(this, 'typeSafe')] = new TokenList();
+      tokens = tokensAllTypes[get(this, 'typeSafe')];
+    }
+    
     // Clear default title
     if (tokens.length === 0) {
       //document.title = '';
-      $('meta[name=description]').remove();
+      
+      if ( !$( "#meta-"+get(this, 'typeSafe') ).length ) {
+        $( "#meta-tag-render-container" ).append( "<div id='meta-"+get(this, 'typeSafe')+"'></div>" );
+      } else {
+        $('#meta-'+get(this, 'typeSafe')).html('');
+      }
+      
+      // remove meta tag
+      var selector = this.makeSelector();
+      $(selector).remove();
+      
       if (get(this, 'separator') == null) {
         set(this, 'separator', ' | ');
       }
     }
+    
+
+
+    
 
     tokens.push(this);
     this._super.apply(this, arguments);
@@ -34,18 +68,23 @@ export default Ember.Component.extend({
 
   showSeparatorAfter: null,
   showSeparatorBefore: null,
+
+  makeSelector: function(){
+    return( "meta["+get(this, 'key')+"='"+get(this, 'type')+"']");
+  },
   
   updateMetaTag: function(){
-    var text = $('#meta-description').text();
-    $('meta[name=description]').remove();
-    $('head').append( '<meta name="description" content="'+text+'">' );
+    var text = $('#meta-'+get(this, 'typeSafe')).text().trim();
+    var selector = this.makeSelector();
+    $(selector).remove();
+    $('head').append( '<meta '+get(this, 'key')+'="'+get(this, 'type')+'" content="'+text+'">' );
   },
 
   render: function (buffer) {
-    console.log('meta-description: render');
+
     //var titleTag = document.getElementsByTagName('title')[0];
-    var tag = $('#meta-description')[0];
-    
+    var tag = $('#meta-'+get(this, 'typeSafe'))[0];
+
     var previous = get(this, 'previous');
     var replace = get(this, 'replace');
     if (previous && get(previous, 'prepend')) {
@@ -63,11 +102,12 @@ export default Ember.Component.extend({
       this._morph = buffer.dom.appendMorph(tag);
     }
     this._super.apply(this, arguments);
-    Ember.run.scheduleOnce('afterRender', this, 'updateMetaTag');
+    Ember.run.once(this, 'updateMetaTag');
+    
   },
 
   willClearRender: function () {
-    console.log('meta-description: willClearRender');
+
     
     tokens.remove(this);
     var morph = this._morph;

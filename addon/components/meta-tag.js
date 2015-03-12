@@ -2,7 +2,6 @@ import Ember from "ember";
 import TokenList from "../system/token-list";
 
 var tokensAllTypes = [],
-    tokens = null,
     get = Ember.get,
     set = Ember.set,
     $ = Ember.$;
@@ -31,13 +30,14 @@ export default Ember.Component.extend({
   init: function () {
     // create a hidden container in the dom for rendering meta-tag templates
     if ( !$( "#meta-tag-render-container" ).length ) {
-      $( "body" ).append( "<div id='meta-tag-render-container' style='display:none;'></div>" ); 
+      $( "body" ).append( "<div id='meta-tag-render-container' style='/*display:none;*/'></div>" ); 
     }
     
     if(Ember.isEmpty(tokensAllTypes[get(this, 'typeSafe')])){
       tokensAllTypes[get(this, 'typeSafe')] = new TokenList();
-      tokens = tokensAllTypes[get(this, 'typeSafe')];
     }
+    var tokens = tokensAllTypes[get(this, 'typeSafe')];
+    
     
     // Clear default title
     if (tokens.length === 0) {
@@ -57,10 +57,6 @@ export default Ember.Component.extend({
         set(this, 'separator', ' | ');
       }
     }
-    
-
-
-    
 
     tokens.push(this);
     this._super.apply(this, arguments);
@@ -102,12 +98,11 @@ export default Ember.Component.extend({
       this._morph = buffer.dom.appendMorph(tag);
     }
     this._super.apply(this, arguments);
-    Ember.run.once(this, 'updateMetaTag');
-    
+    Ember.run.scheduleOnce('afterRender', this, 'updateMetaTag');    
   },
 
   willClearRender: function () {
-
+    var tokens = tokensAllTypes[get(this, 'typeSafe')];
     
     tokens.remove(this);
     var morph = this._morph;

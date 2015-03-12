@@ -30,7 +30,7 @@ export default Ember.Component.extend({
   init: function () {
     // create a hidden container in the dom for rendering meta-tag templates
     if ( !$( "#meta-tag-render-container" ).length ) {
-      $( "body" ).append( "<div id='meta-tag-render-container' style='/*display:none;*/'></div>" ); 
+      $( "body" ).append( "<div id='meta-tag-render-container' style='display:none;'></div>" ); 
     }
     
     if(Ember.isEmpty(tokensAllTypes[get(this, 'typeSafe')])){

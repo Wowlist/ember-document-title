@@ -1,6 +1,6 @@
 {
   "name": "ember-document-title",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "{{document-title}} and {{meta-tag}} for ember applications",
   "directories": {
     "doc": "doc",

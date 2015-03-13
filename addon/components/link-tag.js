@@ -28,9 +28,9 @@ export default Ember.Component.extend({
   }.property('type'),
 
   init: function () {
-    // create a hidden container in the dom for rendering meta-tag templates
-    if ( !$( "#meta-tag-render-container" ).length ) {
-      $( "body" ).append( "<div id='meta-tag-render-container' style='display:none;'></div>" ); 
+    // create a hidden container in the dom for rendering link-tag templates
+    if ( !$( "#link-tag-render-container" ).length ) {
+      $( "body" ).append( "<div id='link-tag-render-container' style='display:none;'></div>" ); 
     }
     
     if(Ember.isEmpty(tokensAllTypes[get(this, 'typeSafe')])){
@@ -43,13 +43,13 @@ export default Ember.Component.extend({
     if (tokens.length === 0) {
       //document.title = '';
       
-      if ( !$( "#meta-"+get(this, 'typeSafe') ).length ) {
-        $( "#meta-tag-render-container" ).append( "<div id='meta-"+get(this, 'typeSafe')+"'></div>" );
+      if ( !$( "#link-"+get(this, 'typeSafe') ).length ) {
+        $( "#link-tag-render-container" ).append( "<div id='link-"+get(this, 'typeSafe')+"'></div>" );
       } else {
-        $('#meta-'+get(this, 'typeSafe')).html('');
+        $('#link-'+get(this, 'typeSafe')).html('');
       }
       
-      // remove meta tag
+      // remove link tag
       var selector = this.makeSelector();
       $(selector).remove();
       
@@ -66,20 +66,20 @@ export default Ember.Component.extend({
   showSeparatorBefore: null,
 
   makeSelector: function(){
-    return( "meta["+get(this, 'key')+"='"+get(this, 'type')+"']");
+    return( "link["+get(this, 'key')+"='"+get(this, 'type')+"']");
   },
   
-  updateMetaTag: function(){
-    var text = $('#meta-'+get(this, 'typeSafe')).text().trim();
+  updateLinkTag: function(){
+    var text = $('#link-'+get(this, 'typeSafe')).text().trim();
     var selector = this.makeSelector();
     $(selector).remove();
-    $('head').append( '<meta '+get(this, 'key')+'="'+get(this, 'type')+'" content="'+text+'" />' );
+    $('head').append( '<link '+get(this, 'key')+'="'+get(this, 'type')+'" href="'+text+'" />' );
   },
 
   render: function (buffer) {
 
     //var titleTag = document.getElementsByTagName('title')[0];
-    var tag = $('#meta-'+get(this, 'typeSafe'))[0];
+    var tag = $('#link-'+get(this, 'typeSafe'))[0];
 
     var previous = get(this, 'previous');
     var replace = get(this, 'replace');
@@ -98,7 +98,7 @@ export default Ember.Component.extend({
       this._morph = buffer.dom.appendMorph(tag);
     }
     this._super.apply(this, arguments);
-    Ember.run.scheduleOnce('afterRender', this, 'updateMetaTag');    
+    Ember.run.scheduleOnce('afterRender', this, 'updateLinkTag');    
   },
 
   willClearRender: function () {

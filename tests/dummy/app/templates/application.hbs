@@ -1,7 +1,10 @@
 {{#document-title separator=' > '}}Awesome{{/document-title}}
+
 {{#meta-tag key="property" type="description" separator=' > '}}Hello Test Description{{/meta-tag}}
 {{#meta-tag key="property" type="og:title" separator=' > '}}The Rock{{/meta-tag}}
 {{#meta-tag key="property" type="og:title" separator=' > '}}Movie{{/meta-tag}}
 
+{{#link-tag key="rel" type="canonical" replace=true}}https://website.org{{/link-tag}}
+{{#link-tag key="rel" type="icon" replace=true}}/favicon.ico{{/link-tag}}
 
 {{outlet}}

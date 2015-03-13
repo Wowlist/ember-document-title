@@ -5,6 +5,9 @@
 {{#meta-tag key="property" type="og:title" separator=' > '}}Movie{{/meta-tag}}
 
 {{#link-tag key="rel" type="canonical" replace=true}}https://website.org{{/link-tag}}
-{{#link-tag key="rel" type="icon" replace=true}}/favicon.ico{{/link-tag}}
+{{#link-tag key="rel" type="icon" replace=true update=text}}/{{text}}.ico{{/link-tag}}
+
+{{input value=text}}
+{{text}}
 
 {{outlet}}

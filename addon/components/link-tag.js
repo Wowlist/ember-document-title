@@ -17,15 +17,26 @@ export default Ember.Component.extend({
   
   key: null,
   type: null,
+  update: null,
+  
 
   isVirtual: true,
   tagName: '',
   hidden: false,
 
 
+
+  // computed properties
+  
   typeSafe: function(){
     return get(this, 'type').replace(/:/g, "");
   }.property('type'),
+
+  // observers
+  doUpdate: function(){
+    Ember.run.scheduleOnce('afterRender', this, 'updateLinkTag');    
+  }.observes('update'),
+
 
   init: function () {
     // create a hidden container in the dom for rendering link-tag templates

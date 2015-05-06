@@ -81,7 +81,7 @@ export default Ember.Component.extend({
   },
   
   updateLinkTag: function(){
-    var text = $('#link-'+get(this, 'typeSafe')).text().trim();
+    var text = $('#link-'+get(this, 'typeSafe')).text().replace("<!---->", "").trim();
     var selector = this.makeSelector();
     $(selector).remove();
     $('head').append( '<link '+get(this, 'key')+'="'+get(this, 'type')+'" href="'+text+'" />' );

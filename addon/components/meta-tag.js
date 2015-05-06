@@ -79,7 +79,7 @@ export default Ember.Component.extend({
   },
   
   updateMetaTag: function(){
-    var text = $('#meta-'+get(this, 'typeSafe')).text().trim();
+    var text = $('#meta-'+get(this, 'typeSafe')).text().replace("<!---->", "").trim();
     var selector = this.makeSelector();
     $(selector).remove();
     $('head').append( '<meta '+get(this, 'key')+'="'+get(this, 'type')+'" content="'+text+'" />' );

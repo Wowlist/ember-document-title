@@ -45,7 +45,9 @@ export default Ember.Component.extend({
         set(previous, 'showSeparatorBefore', false);
       }
       set(this, 'showSeparatorAfter', true);
-      this._morph = buffer.dom.insertMorphBefore(titleTag, previous._morph.start);
+      //this._morph = buffer.dom.insertMorphBefore(titleTag, previous._morph.start);
+      var firstNode = previous._morph.firstNode || previous._morph.start;
+      this._morph = buffer.dom.insertMorphBefore(titleTag, firstNode);
     } else {
       set(this, 'showSeparatorBefore', !replace);
       this._morph = buffer.dom.appendMorph(titleTag);

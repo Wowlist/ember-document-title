@@ -70,8 +70,29 @@ export default Ember.Component.extend({
     this._super.apply(this, arguments);
   },
   
+  /**
+    cleanTitleTag
+    hack solution to remove html comments from the title tag
+    preserves the nodes so as not to break ember binding
+  */
+  
+  cleanTitleTag: function (node) {
+    for(var n = 0; n < node.childNodes.length; n ++) {
+      var child = node.childNodes[n];
+
+      if ( child.nodeType === 8 ) {
+        node.insertBefore(document.createTextNode(""), child);
+        node.removeChild(child);
+      }
+    }
+  },
+  
   titleChangeObserver: function(){
+    var self = this;
     // remove html comments from document title
-    document.title = document.title;
-  }.observes('update')
+    Ember.run.next(this, function() {
+      var title = $('title')[0];
+      self.cleanTitleTag(title);
+    });
+  }.observes('update').on('init')
 });
